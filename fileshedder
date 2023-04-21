@@ -1,0 +1,28 @@
+import os
+import random
+import sys
+
+def secure_delete(file_path, passes=3):
+    if not os.path.isfile(file_path):
+        print(f"{file_path} not found.")
+        return
+
+    print(f"Securely deleting {file_path}...")
+
+    with open(file_path, "ba+") as file:
+        length = file.tell()
+        for _ in range(passes):
+            file.seek(0)
+            file.write(os.urandom(length))
+
+    os.remove(file_path)
+    print(f"{file_path} has been securely deleted.")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python secure_delete.py <file_path>")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+    secure_delete(file_path)
+
